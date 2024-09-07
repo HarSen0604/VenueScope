@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" style="background: linear-gradient(135deg, #3498db, #2ecc71);">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+
+<body>
+    <div class="home-box">
+        <h1>VenueScope</h1>
+        <div class="button-group">
+            <a href="{{ url_for('memberLogin') }}" class="home-btn" style="background: linear-gradient(135deg, #b90000, #005eff);">Member Login</a>
+            <a href="{{ url_for('studentLogin') }}" class="home-btn" style="background: linear-gradient(135deg, #005eff, #b90000);">Student Login</a>
+        </div>
+    </div>
+
+    <footer style="position: fixed; bottom: 0; width: 100%; text-align: center; padding: 10px; background-color: rgba(0, 0, 0, 0.5); color: white;">
+        Done for the course 19Z013 - Open Source Systems by <br> Hareesh S (21Z218) IV BE CSE G1
+    </footer>
+</body>
+
+</html>
