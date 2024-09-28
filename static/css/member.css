@@ -1,0 +1,68 @@
+body, html {
+    font-family: Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.navbar {
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    position: fixed;
+}
+
+.navbar h1 {
+    color: #ffffff;
+    flex-grow: 1;
+    text-align: center;
+    margin: 0;
+}
+
+.nav-right {
+    margin-left: auto;
+}
+
+.sign-out-btn {
+    padding: 12px 25px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #ff5900, #ff00ee);
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.sign-out-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+#vanta-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+}

@@ -96,6 +96,27 @@ def forgotPassword():
     
     return renderForgotPasswordPage()
 
+@app.route('/mainStudent')
+def mainStudent():
+    """
+    Renders the main dashboard for students, displaying their booked venues.
+    
+    Returns:
+        str: The rendered HTML of the student main page with booking information.
+    """
+    bookings = venueManagementService.fetchBookedVenues()
+    return render_template('main_student.html', bookings=bookings)
+
+@app.route('/mainMember')
+def mainMember():
+    """
+    Renders the main dashboard for members.
+    
+    Returns:
+        str: The rendered HTML of the member main page.
+    """
+    return render_template('main_member.html')
+
 def initializeAttemptCounter():
     """
     Initializes the attempt counter for the forgot password process if it doesn't already exist in the session.
@@ -224,27 +245,6 @@ def renderForgotPasswordPage(showCaptcha=False, selectedImage=None, message=''):
                            imageName=selectedImage,
                            attemptsRemaining=attemptCounter, 
                            message=message)
-
-@app.route('/mainStudent')
-def mainStudent():
-    """
-    Renders the main dashboard for students, displaying their booked venues.
-    
-    Returns:
-        str: The rendered HTML of the student main page with booking information.
-    """
-    bookings = venueManagementService.fetchBookedVenues()
-    return render_template('main_student.html', bookings=bookings)
-
-@app.route('/mainMember')
-def mainMember():
-    """
-    Renders the main dashboard for members.
-    
-    Returns:
-        str: The rendered HTML of the member main page.
-    """
-    return render_template('main_member.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

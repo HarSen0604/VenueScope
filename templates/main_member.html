@@ -8,8 +8,26 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Main Page</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/member.css') }}">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/tengbao/vanta/dist/vanta.fog.min.js"></script>
+    
+    <script src="{{ url_for('static', filename='js/member.js') }}" defer></script>
 </head>
-<p>Hello World!</p>
 
+<body>
+    <div id="vanta-bg"></div> <!-- Vanta.js background container -->
+    
+    <div class="navbar">
+        <h1>Events</h1>
+        <div class="nav-right">
+            <a href="{{ url_for('home') }}" class="sign-out-btn">Sign Out</a>
+        </div>
+    </div>
+
+    <!-- Additional content can go here -->
+    
+</body>
 </html>

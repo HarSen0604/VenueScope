@@ -18,6 +18,7 @@ body {
     right: 0;
     display: flex;
     justify-content: space-between;
+    justify-content: space-between;
     align-items: center;
     padding: 20px 30px;
     background: rgba(0, 0, 0, 0.5);
@@ -26,6 +27,7 @@ body {
 }
 
 .navbar h1 {
+    color: #ffffff;
     flex-grow: 1;
     text-align: center;
     margin: 0;
@@ -51,7 +53,6 @@ h1 {
     margin-top: 80px;
 }
 
-/* Booking Box Styles */
 .booking-box {
     border: 1px solid #ccc;
     padding: 20px;
