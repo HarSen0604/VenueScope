@@ -4,7 +4,7 @@ import mysql.connector
 import requests
 from bs4 import BeautifulSoup
 
-class UserService:
+class UserAuthentication:
     """
     A class to handle user authentication and password validation.
     """

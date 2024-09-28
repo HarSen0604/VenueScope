@@ -1,13 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from Captcha import Captcha
-from UserService import UserService
+from UserAuthentication import UserAuthentication
+from VenueManagement import VenueManagement
 
 app = Flask(__name__)
 app.secret_key = '!@#$%^&*()-=_+[]{}\|;:\'\"/.,<>?`~'
 
 # Initialize services
 captchaService = Captcha()
-userService = UserService()
+userAuthService = UserAuthentication()
+venueManagementService = VenueManagement()
 
 # Constants
 DEFAULT_ATTEMPTS = 3
@@ -36,7 +38,7 @@ def studentLogin():
         rollNo = request.form.get('roll_no')
         password = request.form.get('password')
         
-        if userService.authenticateStudent(rollNo, password):
+        if userAuthService.authenticateStudent(rollNo, password):
             return redirect(url_for('mainStudent'))
         else:
             flash('Invalid credentials', 'error')
@@ -58,7 +60,7 @@ def memberLogin():
         username = request.form.get('username')
         password = request.form.get('password')
         
-        if userService.authenticateMember(username, password):
+        if userAuthService.authenticateMember(username, password):
             return redirect(url_for('mainMember'))
         else:
             flash('Invalid credentials', 'error')
@@ -217,7 +219,8 @@ def mainStudent():
     Returns:
         str: The rendered HTML of the student main page.
     """
-    return render_template('main_student.html')
+    bookings = venueManagementService.fetchBookedVenues()
+    return render_template('main_student.html', bookings=bookings)
 
 @app.route('/mainMember')
 def mainMember():

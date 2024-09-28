@@ -8,8 +8,36 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Main Page</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/student.css') }}">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/tengbao/vanta/dist/vanta.dots.min.js"></script>
+
+    <script src="{{ url_for('static', filename='js/student.js') }}" defer></script>
 </head>
-<p>Hello World!</p>
+
+<body>
+    <div id="vanta-bg"></div>
+    <div class="navbar">
+        <h1>Events</h1>
+        <div class="nav-right">
+            <a href="{{ url_for('home') }}" class="sign-out-btn">Sign Out</a>
+        </div>
+    </div>
+
+    <div class="bookings">
+        {% for booking in bookings %}
+        <div class="booking-box">
+            <h2>Venue: {{ booking.venue_name }}</h2>
+            <p>Club: {{ booking.club_name }}</p>
+            <p>Date: {{ booking.date }}</p>
+            <p>Time: {{ booking.from_time }} - {{ booking.end_time }}</p>
+            <div class="button-group">
+                <a href="{{ booking.venue_link }}" target="_blank" class="home-btn">REGISTER</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
 
 </html>
