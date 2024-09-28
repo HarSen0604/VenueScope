@@ -70,10 +70,15 @@ class Captcha:
         if newPassword != reEnterPassword:
             return False
 
-        # Regex for strong password validation
-        password_regex = r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&\-])[A-Za-z\d!@$!%*?&\-]{8,}$"
+        pattern = re.compile(r'^(?=.*\d)'          # At least one digit
+                            r'(?=.*[a-z])'        # At least one lowercase letter
+                            r'(?=.*[A-Z])'        # At least one uppercase letter
+                            r'(?=.*[@$!%*?&\-\_])'  # At least one special character (escaped hyphen)
+                            r'[A-Za-z\d@$!%*?&\-\_]{8,}$')  # Minimum 8 characters, escape hyphen
         
-        if re.match(password_regex, newPassword):
+        if pattern.match(newPassword):
+            print("Password meets the policy.")
             return True
         else:
+            print("Password does not meet the policy.")
             return False

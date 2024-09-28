@@ -33,11 +33,10 @@ def studentLogin():
     """
     message = ''
     if request.method == 'POST':
-        username = request.form.get('username')
+        rollNo = request.form.get('roll_no')
         password = request.form.get('password')
         
-        # Use the UserService to authenticate
-        if userService.authenticate(username, password):
+        if userService.authenticateStudent(rollNo, password):
             return redirect(url_for('mainStudent'))
         else:
             flash('Invalid credentials', 'error')
@@ -59,8 +58,7 @@ def memberLogin():
         username = request.form.get('username')
         password = request.form.get('password')
         
-        # Use the UserService to authenticate
-        if userService.authenticate(username, password):
+        if userService.authenticateMember(username, password):
             return redirect(url_for('mainMember'))
         else:
             flash('Invalid credentials', 'error')

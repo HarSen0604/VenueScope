@@ -1,3 +1,5 @@
 Flask
 bcrypt
 mysql-connector-python
+requests
+beautifulsoup4

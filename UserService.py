@@ -1,6 +1,8 @@
 import re
 import bcrypt
 import mysql.connector
+import requests
+from bs4 import BeautifulSoup
 
 class UserService:
     """
@@ -20,7 +22,7 @@ class UserService:
             'database': database,
         }
 
-    def authenticate(self, email, password):
+    def authenticateMember(self, email, password):
         """
         Authenticates a user by checking if the provided email and password match the stored credentials
         and if the password meets the strong password criteria.
@@ -116,3 +118,57 @@ class UserService:
         except mysql.connector.Error as err:
             print(f"Error: {err}")
             return None
+    
+    def authenticateStudent(self, roll_no, password):
+        """
+        Authenticates a student by logging into the PSG Tech eCampus platform with the provided roll number and password.
+
+        Args:
+            roll_no (str): The student's roll number.
+            password (str): The student's password.
+
+        Returns:
+            bool: True if the login is successful, False otherwise.
+        """
+        print("Attempting student authentication...")
+
+        # URL of the login page
+        url = 'https://ecampus.psgtech.ac.in/studzone2/'
+
+        # Create a session to manage cookies
+        session = requests.Session()
+
+        # Get the login page to retrieve necessary hidden fields
+        response = session.get(url)
+        
+        # Check if the page was retrieved successfully
+        if response.status_code != 200:
+            print("Failed to load the login page.")
+            return False
+
+        # Parse the required hidden fields (__VIEWSTATE, __VIEWSTATEGENERATOR, __EVENTVALIDATION)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        viewstate = soup.find('input', {'name': '__VIEWSTATE'}).get('value')
+        viewstategen = soup.find('input', {'name': '__VIEWSTATEGENERATOR'}).get('value')
+        eventval = soup.find('input', {'name': '__EVENTVALIDATION'}).get('value')
+
+        # Data for login
+        login_data = {
+            '__VIEWSTATE': viewstate,
+            '__VIEWSTATEGENERATOR': viewstategen,
+            '__EVENTVALIDATION': eventval,
+            'txtusercheck': roll_no,
+            'txtpwdcheck': password,
+            'abcd3': 'Login',
+        }
+
+        # Post the login data to the server
+        login_response = session.post(url, data=login_data)
+
+        # Check if login was successful by inspecting the response
+        if "Student Login" not in login_response.text:
+            print("Login successful!")
+            return True
+        else:
+            print("Login failed.")
+            return False
