@@ -11,9 +11,8 @@ class UserAuthentication:
 
     def __init__(self):
         """
-        Initializes the UserService object with connection to MySQL database.
+        Initializes the UserAuthentication object with connection details to the MySQL database.
         """
-        # MySQL database connection details
         database = 'VenueScope'
         self.db_config = {
             'user': 'root',
@@ -24,15 +23,17 @@ class UserAuthentication:
 
     def authenticateMember(self, email, password):
         """
-        Authenticates a user by checking if the provided email and password match the stored credentials
-        and if the password meets the strong password criteria.
+        Authenticates a club member by verifying their email and password.
+        
+        Checks if the provided password meets strong password criteria and then verifies it
+        against the stored hashed password in the database.
 
         Args:
-            email (str): The email to authenticate.
-            password (str): The password to validate and match with the stored credentials.
+            email (str): The email of the member attempting to authenticate.
+            password (str): The password provided for authentication.
 
         Returns:
-            bool: True if the email exists and the password matches the stored credentials, False otherwise.
+            bool: True if authentication is successful, False otherwise.
         """
         # First, check if the password meets the validation policy
         if not self.validatePassword(password):
@@ -57,16 +58,21 @@ class UserAuthentication:
 
     def validatePassword(self, password):
         """
-        Validates a password against a strong password policy.
-        The policy ensures:
+        Validates a password against the defined strong password policy.
+        
+        The policy ensures that the password contains:
         - At least one digit
         - At least one lowercase letter
         - At least one uppercase letter
         - At least one special character from @$!%*?&-
         - Minimum length of 8 characters
-        """
-        print("Validating password...")
 
+        Args:
+            password (str): The password to validate.
+
+        Returns:
+            bool: True if the password meets the policy, False otherwise.
+        """
         # Corrected regex to enforce the password policy
         pattern = re.compile(r'^(?=.*\d)'          # At least one digit
                             r'(?=.*[a-z])'        # At least one lowercase letter
@@ -76,21 +82,19 @@ class UserAuthentication:
         
         # Final check using the full pattern
         if pattern.match(password):
-            print("Password meets the policy.")
             return True
         else:
-            print("Password does not meet the policy.")
             return False
 
     def getPasswordFromDB(self, email):
         """
-        Retrieves the stored hashed password for the given email from the MySQL database.
+        Retrieves the stored hashed password for a given member's email from the MySQL database.
 
         Args:
-            email (str): The email whose password needs to be retrieved.
+            email (str): The email of the user whose password needs to be retrieved.
 
         Returns:
-            str: The stored hashed password if the user exists, None otherwise.
+            str: The stored hashed password if the email exists, None otherwise.
         """
         try:
             # Connect to the MySQL database
@@ -121,17 +125,17 @@ class UserAuthentication:
     
     def authenticateStudent(self, roll_no, password):
         """
-        Authenticates a student by logging into the PSG Tech eCampus platform with the provided roll number and password.
+        Authenticates a student by logging into the PSG Tech eCampus platform using the provided roll number and password.
 
+        The method attempts to log in using the provided credentials by submitting them to the eCampus login form.
+        
         Args:
             roll_no (str): The student's roll number.
             password (str): The student's password.
 
         Returns:
-            bool: True if the login is successful, False otherwise.
+            bool: True if login is successful, False otherwise.
         """
-        print("Attempting student authentication...")
-
         # URL of the login page
         url = 'https://ecampus.psgtech.ac.in/studzone2/'
 

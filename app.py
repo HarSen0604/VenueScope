@@ -27,9 +27,11 @@ def home():
 @app.route('/studentLogin', methods=['GET', 'POST'])
 def studentLogin():
     """
-    Handles student login. Authenticates user credentials and redirects to the student main page 
-    if successful. Displays an error message on failure.
-
+    Handles student login by authenticating credentials.
+    
+    If the credentials are valid, redirects to the main student page. 
+    Otherwise, displays an error message.
+    
     Returns:
         str: The rendered HTML of the student login page.
     """
@@ -49,9 +51,11 @@ def studentLogin():
 @app.route('/memberLogin', methods=['GET', 'POST'])
 def memberLogin():
     """
-    Handles member login. Authenticates user credentials and redirects to the member main page 
-    if successful. Displays an error message on failure.
-
+    Handles member login by authenticating credentials.
+    
+    If the credentials are valid, redirects to the main member page. 
+    Otherwise, displays an error message.
+    
     Returns:
         str: The rendered HTML of the member login page.
     """
@@ -71,8 +75,11 @@ def memberLogin():
 @app.route('/forgotPassword', methods=['GET', 'POST'])
 def forgotPassword():
     """
-    Handles the forgot password process. Manages CAPTCHA and password validation, and attempts tracking.
-
+    Handles the forgot password process, including CAPTCHA validation and password reset.
+    
+    If the user has exhausted attempts, they are redirected to the home page. 
+    Otherwise, manages username submission, CAPTCHA validation, and new password entry.
+    
     Returns:
         str: The rendered HTML of the forgot password page.
     """
@@ -91,37 +98,39 @@ def forgotPassword():
 
 def initializeAttemptCounter():
     """
-    Initializes the attempt counter for the forgot password process if not already set.
+    Initializes the attempt counter for the forgot password process if it doesn't already exist in the session.
     """
     if 'currentAttempts' not in session:
         session['currentAttempts'] = DEFAULT_ATTEMPTS
 
 def decrementAttemptCounter():
     """
-    Decrements the attempt counter by one if there are remaining attempts.
+    Decreases the number of attempts remaining for the forgot password process by 1, 
+    if there are still remaining attempts.
     """
     if session.get('currentAttempts', 0) > 0:
         session['currentAttempts'] -= 1
 
 def resetAttemptCounter():
     """
-    Resets the attempt counter to the default number of attempts.
+    Resets the attempt counter to the default value.
     """
     session['currentAttempts'] = DEFAULT_ATTEMPTS
 
 def areAttemptsExhausted():
     """
-    Checks if the number of attempts for the forgot password process is exhausted.
-
+    Checks whether the number of allowed attempts for the forgot password process has been exhausted.
+    
     Returns:
-        bool: True if attempts are exhausted, False otherwise.
+        bool: True if the attempts are exhausted, False otherwise.
     """
     return session.get('currentAttempts', 0) <= 0
 
 def handleExhaustedAttempts():
     """
-    Handles the case when the number of attempts is exhausted by resetting the counter and redirecting to the home page.
-
+    Handles cases where the user has exhausted their allowed attempts for resetting the password.
+    Resets the counter and redirects the user to the home page with a message.
+    
     Returns:
         werkzeug.wrappers.response.Response: The response object for redirecting to the home page.
     """
@@ -131,10 +140,11 @@ def handleExhaustedAttempts():
 
 def handleUsernameSubmission():
     """
-    Handles the username submission during the forgot password process. Shows CAPTCHA for validation.
-
+    Handles the submission of the username during the forgot password process.
+    Upon valid submission, the CAPTCHA challenge is presented.
+    
     Returns:
-        str: The rendered HTML of the forgot password page with CAPTCHA.
+        str: The rendered HTML of the forgot password page with the CAPTCHA displayed.
     """
     username = request.form.get('username')
     showCaptcha = True
@@ -148,10 +158,13 @@ def handleUsernameSubmission():
 
 def handleCaptchaSubmission():
     """
-    Handles the CAPTCHA and password submission during the forgot password process. Validates CAPTCHA and new password.
-
+    Handles the submission of the CAPTCHA and the new password during the forgot password process.
+    Validates both the CAPTCHA input and the new password, and either proceeds with the reset or 
+    prompts the user to try again.
+    
     Returns:
-        str: The rendered HTML of the forgot password page with a CAPTCHA error message if validation fails.
+        str: The rendered HTML of the forgot password page if validation fails, 
+             or redirects to the home page upon success.
     """
     newPassword = request.form.get('newPassword')
     confirmPassword = request.form.get('reEnterPassword')
@@ -177,15 +190,16 @@ def handleCaptchaSubmission():
 
 def isCaptchaAndPasswordValid(captchaInput, newPassword, confirmPassword):
     """
-    Validates the CAPTCHA input and new password against the CAPTCHA solution and password policy.
-
+    Validates the provided CAPTCHA input and checks that the new password matches 
+    the confirmation password and meets the required policy.
+    
     Args:
-        captchaInput (str): The input CAPTCHA value.
-        newPassword (str): The new password to be validated.
-        confirmPassword (str): The confirmation password to be validated.
-
+        captchaInput (str): The input provided for the CAPTCHA validation.
+        newPassword (str): The new password entered by the user.
+        confirmPassword (str): The confirmation of the new password.
+    
     Returns:
-        bool: True if CAPTCHA and passwords are valid, False otherwise.
+        bool: True if both the CAPTCHA and password validation pass, False otherwise.
     """
     return ('captchaSolution' in session and 
             captchaService.validateCaptcha(captchaInput) and 
@@ -193,13 +207,13 @@ def isCaptchaAndPasswordValid(captchaInput, newPassword, confirmPassword):
 
 def renderForgotPasswordPage(showCaptcha=False, selectedImage=None, message=''):
     """
-    Renders the forgot password page with optional CAPTCHA and message.
-
+    Renders the forgot password page, optionally displaying the CAPTCHA and any error message.
+    
     Args:
-        showCaptcha (bool, optional): Whether to display the CAPTCHA. Defaults to False.
+        showCaptcha (bool, optional): Whether to display the CAPTCHA section. Defaults to False.
         selectedImage (str, optional): The filename of the selected CAPTCHA image. Defaults to None.
-        message (str, optional): The message to display on the page. Defaults to an empty string.
-
+        message (str, optional): Any message to display to the user. Defaults to an empty string.
+    
     Returns:
         str: The rendered HTML of the forgot password page.
     """
@@ -214,10 +228,10 @@ def renderForgotPasswordPage(showCaptcha=False, selectedImage=None, message=''):
 @app.route('/mainStudent')
 def mainStudent():
     """
-    Renders the main page for students.
-
+    Renders the main dashboard for students, displaying their booked venues.
+    
     Returns:
-        str: The rendered HTML of the student main page.
+        str: The rendered HTML of the student main page with booking information.
     """
     bookings = venueManagementService.fetchBookedVenues()
     return render_template('main_student.html', bookings=bookings)
@@ -225,8 +239,8 @@ def mainStudent():
 @app.route('/mainMember')
 def mainMember():
     """
-    Renders the main page for members.
-
+    Renders the main dashboard for members.
+    
     Returns:
         str: The rendered HTML of the member main page.
     """
