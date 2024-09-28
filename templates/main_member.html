@@ -8,26 +8,83 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Main Page</title>
-    
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/member.css') }}">
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/tengbao/vanta/dist/vanta.fog.min.js"></script>
-    
+
     <script src="{{ url_for('static', filename='js/member.js') }}" defer></script>
 </head>
 
 <body>
-    <div id="vanta-bg"></div> <!-- Vanta.js background container -->
-    
+    <div id="vanta-bg"></div>
+
     <div class="navbar">
-        <h1>Events</h1>
+        <h1>Booked Venue Details</h1>
         <div class="nav-right">
             <a href="{{ url_for('home') }}" class="sign-out-btn">Sign Out</a>
         </div>
     </div>
 
-    <!-- Additional content can go here -->
-    
+    <!-- Booked Venue Details Table -->
+    <div class="booked-venue-details">
+        <table border="1" cellpadding="10" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>From Time</th>
+                    <th>End Time</th>
+                    <th>Venue Name</th>
+                    <th>Club Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>{{ booking.date }}</td>
+                    <td>{{ booking.from_time }}</td>
+                    <td>{{ booking.end_time }}</td>
+                    <td>{{ booking.venue_name }}</td>
+                    <td>{{ booking.club_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="booking-form">
+
+    </div>
+    <h2>Book a Venue</h2>
+    <form action="{{ url_for('book_venue') }}" method="POST" id="venueForm">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required> <br>
+
+        <label for="from_time">From Time:</label>
+        <input type="time" id="from_time" name="from_time" required> <br>
+
+        <label for="end_time">End Time:</label>
+        <input type="time" id="end_time" name="end_time" required> <br>
+
+        <label for="venue_name">Venue Name:</label>
+        <select id="venue_name" name="venue_name" required>
+            <option value="">Select Venue</option>
+            {% for venue in venues %}
+            <option value="{{ venue.venue_name }}">{{ venue.venue_name }}</option>
+            {% endfor %}
+        </select> <br>
+
+        <label for="club_name">Club Name:</label>
+        <input type="text" id="club_name" name="club_name" value="{{ club_name }}" readonly> <br>
+
+        <label for="link">Link:</label>
+        <input type="text" id="link" name="link" required> <br>
+
+        <input type="submit" value="Book Venue"> <br>
+    </form>
+    </div>
+
 </body>
+
 </html>

@@ -1,41 +1,4 @@
-body, html {
-    font-family: Helvetica, Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    width: 100%;
-    overflow-x: hidden;
-}
-
-body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-.navbar {
-    top: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-between;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 30px;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    position: fixed;
-}
-
-.navbar h1 {
-    color: #ffffff;
-    flex-grow: 1;
-    text-align: center;
-    margin: 0;
-}
-
-.nav-right {
-    margin-left: auto;
-}
+@import url('./common.css');
 
 h1 {
     color: #ffffff;
@@ -108,22 +71,9 @@ h1 {
 }
 
 .sign-out-btn {
-    margin-left: 20px;
-    padding: 12px 25px;
-    color: #fff;
-    text-decoration: none;
-    font-size: 18px;
-    border-radius: 5px;
-    transition: background 0.3s ease, transform 0.3s ease;
     background: linear-gradient(135deg, #716e6e, #411900);
 }
 
-.sign-out-btn:hover {
-    opacity: 0.9;
-    transform: scale(1.05);
-}
-
-/* Mobile Styles */
 @media (max-width: 768px) {
     .booking-box {
         width: 80%;
@@ -132,13 +82,4 @@ h1 {
     h1 {
         font-size: 1.5rem;
     }
-}
-
-#vanta-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
 }

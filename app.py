@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from Captcha import Captcha
 from UserAuthentication import UserAuthentication
 from VenueManagement import VenueManagement
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = '!@#$%^&*()-=_+[]{}\|;:\'\"/.,<>?`~'
@@ -61,10 +62,11 @@ def memberLogin():
     """
     message = ''
     if request.method == 'POST':
-        username = request.form.get('username')
+        email = request.form.get('email')
         password = request.form.get('password')
         
-        if userAuthService.authenticateMember(username, password):
+        if userAuthService.authenticateMember(email, password):
+            session['email'] = email
             return redirect(url_for('mainMember'))
         else:
             flash('Invalid credentials', 'error')
@@ -110,12 +112,77 @@ def mainStudent():
 @app.route('/mainMember')
 def mainMember():
     """
-    Renders the main dashboard for members.
-    
+    Renders the main dashboard page for members.
+
+    This function fetches the list of booked venues, available venues, and the club name
+    associated with the currently logged-in user (based on the user's email stored in
+    the session). It then renders the `main_member.html` template, passing in these 
+    details for display in the user's dashboard.
+
     Returns:
-        str: The rendered HTML of the member main page.
+        str: The rendered HTML of the member dashboard, displaying:
+             - A list of the user's current bookings (`bookings`).
+             - A dropdown list of available venues (`venues`).
+             - The club name associated with the logged-in user (`club_name`).
     """
-    return render_template('main_member.html')
+    bookings = venueManagementService.fetchBookedVenues()
+    venues = venueManagementService.fetchVenues()
+    email = session.get('email')
+    club_name = venueManagementService.getClubNameByEmail(email)
+    return render_template('main_member.html', bookings=bookings, venues=venues, club_name=club_name)
+
+@app.route('/book_venue', methods=['POST'])
+def book_venue():
+    """
+    Handles the form submission for booking a venue.
+
+    This function receives a JSON request containing booking details, validates the data,
+    checks for conflicting bookings, and either confirms the booking or returns an error
+    message. It ensures that the booking date and time are valid (i.e., not in the past 
+    and that the end time is after the start time) and that the venue is available.
+
+    If the booking is successful, it stores the booking in the database and returns
+    a success response. Otherwise, it returns an appropriate error message.
+
+    Returns:
+        Response: A JSON response with the status and message of the booking operation.
+                 Possible statuses are:
+                    - 'success' (200): If the venue is successfully booked.
+                    - 'error' (400): If any validation fails (e.g., past date, invalid time, 
+                      or venue conflict).
+    """
+    data = request.get_json()  # Fetch data from JSON request body
+    
+    email = session.get('email')
+    # Fetch the club name associated with the logged-in user
+    club_name = venueManagementService.getClubNameByEmail(email)
+    if not club_name:
+        return jsonify({'status': 'error', 'message': 'Club not found for the logged-in user.'}), 400
+    
+    date = data['date']
+    from_time = data['from_time']
+    end_time = data['end_time']
+    venue_name = data['venue_name']
+    venue_link = data['link']
+    
+    # Convert date and times for validation
+    current_date = datetime.now().date()
+    
+    if datetime.strptime(date, '%Y-%m-%d').date() < current_date:
+        return jsonify({'status': 'error', 'message': 'You cannot book a venue in the past.'}), 400
+
+    if from_time >= end_time:
+        return jsonify({'status': 'error', 'message': 'End time must be after start time.'}), 400
+    
+    # Check for booking clashes
+    if venueManagementService.isVenueBooked(date, from_time, end_time, venue_name):
+        return jsonify({'status': 'error', 'message': 'Venue is already booked for this time slot.'}), 400
+    
+    # Insert the booking if all validations pass
+    venueManagementService.bookVenue(date, from_time, end_time, venue_name, club_name, venue_link)
+    
+    return jsonify({'status': 'success', 'message': 'Venue booked successfully!'}), 200
+
 
 def initializeAttemptCounter():
     """

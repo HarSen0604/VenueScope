@@ -43,7 +43,7 @@ if encrypted_password:
     query = "INSERT INTO club_head_details (head_id, club_head, phone_number, password, email) VALUES\n"
 
     values = [
-        f"({idx}, '{head}', '{generate_phone_number()}', '{encrypted_password}', '{head.replace(' ', '_')}@random.com')"
+        f"({idx}, '{head}', '{generate_phone_number()}', '{encrypted_password}', '{head.replace(' ', '_').lower()}@random.com')"
         for idx, head in enumerate(club_heads, start=1)
     ]
 
