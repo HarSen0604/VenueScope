@@ -2,7 +2,7 @@ import bcrypt
 
 def generate_phone_number():
     """
-    Generate a random phone number. For now, returns a static number.
+    Generate a random phone number.
 
     Returns:
         str: A phone number in string format.

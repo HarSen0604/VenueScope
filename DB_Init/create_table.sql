@@ -1,17 +1,17 @@
 -- Contains details about the club heads
 CREATE TABLE club_head_details (
     head_id INT PRIMARY KEY,
-    club_head VARCHAR(100),
-    phone_number VARCHAR(10),
-    password VARCHAR(255),
-    email VARCHAR(100),
+    club_head VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(10) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL,
     CONSTRAINT check_phone_number CHECK (phone_number REGEXP '^[0-9]{10}$')
 );
 
 -- Contains the list of clubs from the website (https://su.psgtech.ac.in/clubs.php)
 CREATE TABLE club_list (
     club_id INT PRIMARY KEY,
-    club_name VARCHAR(100)
+    club_name VARCHAR(100) NOT NULL
 );
 
 -- Contains the list of venues
@@ -31,12 +31,12 @@ CREATE TABLE club_head (
 
 -- Stores the booking details for venue
 CREATE TABLE booked_venue (
-    venue_id INT,
-    club_id INT,
-    date DATE,
-    from_time TIME,
-    end_time TIME,
-    PRIMARY KEY (venue_id, club_id, date),
+    venue_id INT NOT NULL,
+    club_id INT NOT NULL,
+    date DATE NOT NULL,
+    from_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    venue_link TEXT NOT NULL,
     FOREIGN KEY (venue_id) REFERENCES venue_list(venue_id),
     FOREIGN KEY (club_id) REFERENCES club_list(club_id)
 );
