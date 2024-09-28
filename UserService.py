@@ -20,17 +20,17 @@ class UserService:
             'database': database,
         }
 
-    def authenticate(self, username, password):
+    def authenticate(self, email, password):
         """
-        Authenticates a user by checking if the provided username and password match the stored credentials
+        Authenticates a user by checking if the provided email and password match the stored credentials
         and if the password meets the strong password criteria.
 
         Args:
-            username (str): The username to authenticate.
+            email (str): The email to authenticate.
             password (str): The password to validate and match with the stored credentials.
 
         Returns:
-            bool: True if the username exists and the password matches the stored credentials, False otherwise.
+            bool: True if the email exists and the password matches the stored credentials, False otherwise.
         """
         # First, check if the password meets the validation policy
         if not self.validatePassword(password):
@@ -38,16 +38,12 @@ class UserService:
             return False
 
         # Retrieve the stored hashed password from the database
-        stored_password = self.getPasswordFromDB(username)
+        stored_password = self.getPasswordFromDB(email)
 
         # If no stored password is found, return False (authentication fails)
         if stored_password is None:
             print("User not found.")
             return False
-
-        # Print the user-entered password and the stored password (hashed) for debugging
-        print(f"User-entered password (plain text): {password}")
-        print(f"Stored hashed password from DB: {stored_password}")
 
         # Compare the user-entered password with the stored hashed password
         if bcrypt.checkpw(password.encode('utf-8'), stored_password.encode('utf-8')):
@@ -84,12 +80,12 @@ class UserService:
             print("Password does not meet the policy.")
             return False
 
-    def getPasswordFromDB(self, username):
+    def getPasswordFromDB(self, email):
         """
-        Retrieves the stored hashed password for the given username from the MySQL database.
+        Retrieves the stored hashed password for the given email from the MySQL database.
 
         Args:
-            username (str): The username whose password needs to be retrieved.
+            email (str): The email whose password needs to be retrieved.
 
         Returns:
             str: The stored hashed password if the user exists, None otherwise.
@@ -99,9 +95,10 @@ class UserService:
             conn = mysql.connector.connect(**self.db_config)
             cursor = conn.cursor()
 
-            # Query to fetch the hashed password for the given username (email)
+            # Query to fetch the hashed password for the given email
+            email = email.lower()
             query = "SELECT password FROM club_head_details WHERE email = %s"
-            cursor.execute(query, (username,))
+            cursor.execute(query, (email,))
 
             # Fetch the result
             result = cursor.fetchone()
