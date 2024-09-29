@@ -1,4 +1,3 @@
-/* Import common styles */
 @import url('./common.css');
 
 .sign-out-btn {
@@ -49,4 +48,92 @@ td {
     align-items: center;
     padding: 20px;
     margin-top: 80px;
+}
+
+.booking-form {
+    width: 50%;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.booking-form h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.booking-form label {
+    font-size: 1.2rem;
+    color: #555;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.booking-form input[type="date"],
+.booking-form input[type="time"],
+.booking-form input[type="text"],
+.booking-form select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+.booking-form input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.2rem;
+    background: linear-gradient(135deg, #ff5900, #ff00ee);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.booking-form input[type="submit"]:hover {
+    background: linear-gradient(135deg, #ff00ee, #ff5900);
+}
+
+.booking-form input[type="text"]:readonly {
+    background-color: #e0e0e0;
+}
+
+.booking-form input[type="submit"]:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.booking-form select {
+    appearance: none;
+}
+
+.booking-form select:focus {
+    outline: none;
+    border-color: #999;
+}
+
+.booking-form select option {
+    padding: 10px;
+}
+
+.delete-btn {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.delete-btn:hover {
+    background-color: #ff1a1a;
 }

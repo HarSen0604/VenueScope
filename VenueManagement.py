@@ -1,5 +1,6 @@
 import mysql.connector
 from mysql.connector import Error
+from datetime import datetime
 
 class VenueManagement:
     """
@@ -13,6 +14,7 @@ class VenueManagement:
         Attributes:
             db_config (dict): A dictionary containing database connection parameters (user, password, host, database).
         """
+
         database = 'VenueScope'
         self.db_config = {
             'user': 'root',
@@ -29,6 +31,7 @@ class VenueManagement:
             mysql.connector.connection_cext.CMySQLConnection or None: 
             The MySQL connection object if the connection is successful, or None if the connection fails.
         """
+
         try:
             connection = mysql.connector.connect(
                 host=self.db_config['host'],
@@ -50,6 +53,7 @@ class VenueManagement:
             list[dict]: A list of dictionaries, where each dictionary contains booking details such as 
                         date, from_time, end_time, venue link, venue name, and club name.
         """
+
         connection = self.getDBConnection()
         if connection is None:
             return []
@@ -86,6 +90,7 @@ class VenueManagement:
         Returns:
             list[dict]: A list of dictionaries where each dictionary contains 'venue_name'.
         """
+
         connection = self.getDBConnection()
         cursor = connection.cursor(dictionary=True)
         
@@ -106,6 +111,7 @@ class VenueManagement:
         Returns:
             list[dict]: A list of dictionaries where each dictionary contains 'club_name'.
         """
+
         connection = self.getDBConnection()
         cursor = connection.cursor(dictionary=True)
 
@@ -133,6 +139,7 @@ class VenueManagement:
         Returns:
             bool: True if the venue is already booked for the specified time range, False otherwise.
         """
+
         connection = self.getDBConnection()
         cursor = connection.cursor()
 
@@ -165,6 +172,7 @@ class VenueManagement:
             club_name (str): The name of the club making the booking.
             venue_link (str): A link related to the booking (e.g., for event registration).
         """
+
         connection = self.getDBConnection()
         cursor = connection.cursor()
 
@@ -191,6 +199,7 @@ class VenueManagement:
         Returns:
             str or None: The club name if found, or None if no club is associated with the given email.
         """
+
         connection = self.getDBConnection()
         if connection is None:
             return None
@@ -206,6 +215,85 @@ class VenueManagement:
         cursor.execute(query, (email,))
         result = cursor.fetchone()
 
+        cursor.close()
+        connection.close()
+
+        if result:
+            return result[0]
+        return None
+    
+    def deleteBooking(self, date, from_time, end_time, venue_name, club_name):
+        """
+        Deletes a booking for the given date, time, and venue.
+
+        Args:
+            date (str): The date of the booking.
+            from_time (str): The starting time of the booking.
+            venue_name (str): The name of the venue.
+
+        Returns:
+            bool: True if the deletion was successful, False otherwise.
+        """
+
+        connection = self.getDBConnection()
+        if connection is None:
+            return False
+
+        cursor = connection.cursor()
+
+        query = """
+        DELETE FROM booked_venue 
+        WHERE date = %s AND from_time = %s AND end_time = %s AND venue_id = (
+            SELECT venue_id FROM venue_list WHERE venue_name = %s
+        ) AND club_id = (SELECT club_id FROM club_list WHERE club_name = %s);
+        """
+        try:
+            from_time = datetime.strptime(from_time, '%I:%M:%S %p').time() 
+            end_time = datetime.strptime(end_time, '%I:%M:%S %p').time()
+            print(date, from_time, end_time, venue_name, club_name)
+            cursor.execute(query, (date, from_time, end_time, venue_name, club_name))
+            connection.commit()
+            result = cursor.rowcount > 0  # Check if rows were affected
+        except Error as e:
+            print(f"Error deleting booking: {e}")
+            result = False
+        finally:
+            cursor.close()
+            connection.close()
+
+        return result
+
+    def fetchClubNameForBooking(self, date, from_time, venue_name):
+        """
+        Retrieves the club name associated with a specific booking.
+
+        Args:
+            date (str): The date of the booking.
+            from_time (str): The start time of the booking.
+            venue_name (str): The name of the venue.
+
+        Returns:
+            str or None: The club name if found, otherwise None.
+        """
+
+        connection = self.getDBConnection()
+        if connection is None:
+            return None
+        
+        cursor = connection.cursor()
+
+        query = """
+        SELECT cl.club_name
+        FROM booked_venue bv
+        JOIN venue_list vl ON bv.venue_id = vl.venue_id
+        JOIN club_list cl ON bv.club_id = cl.club_id
+        WHERE bv.date = %s AND bv.from_time = %s AND vl.venue_name = %s;
+        """
+        
+        from_time = from_time.split(' ')[0]
+        cursor.execute(query, (date, from_time, venue_name))
+        result = cursor.fetchone()
+        # print(date, from_time, venue_name)
         cursor.close()
         connection.close()
 
