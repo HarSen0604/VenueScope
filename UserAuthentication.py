@@ -176,3 +176,46 @@ class UserAuthentication:
         else:
             print("Login failed.")
             return False
+    
+    def hashPassword(self, password):
+        """
+        Hashes the provided password using bcrypt.
+
+        Args:
+            password (str): The plain-text password to hash.
+
+        Returns:
+            str: The hashed password.
+        """
+        salt = bcrypt.gensalt()
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+        return hashed_password.decode('utf-8')
+
+    def updatePasswordInDB(self, email, hashed_password):
+        """
+        Updates the password for the specified email in the database.
+
+        Args:
+            email (str): The email of the user whose password should be updated.
+            hashed_password (str): The new hashed password to store.
+        """
+        try:
+            # Connect to the MySQL database
+            conn = mysql.connector.connect(**self.db_config)
+            cursor = conn.cursor()
+
+            # Update the password for the given email
+            query = "UPDATE club_head_details SET password = %s WHERE email = %s"
+            cursor.execute(query, (hashed_password, email))
+            
+            # Commit the changes
+            conn.commit()
+
+            # Close the cursor and connection
+            cursor.close()
+            conn.close()
+
+            print(f"Password updated successfully for {email}.")
+
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")

@@ -95,7 +95,8 @@ def forgotPassword():
     initializeAttemptCounter()
 
     if request.method == 'POST':
-        if 'username' in request.form:
+        if 'email' in request.form:
+            initializeAttemptCounter()
             return handleUsernameSubmission()
         else:
             return handleCaptchaSubmission()
@@ -290,11 +291,17 @@ def handleCaptchaSubmission():
     confirmPassword = request.form.get('reEnterPassword')
     captchaInput = request.form.get('otp')
 
-    username = session.get('username')
+    email = session.get('email')
+    print(email)
     selectedImage = session.get('selectedImage')
 
     if isCaptchaAndPasswordValid(captchaInput, newPassword, confirmPassword):
-        flash('Success!', 'success')
+        # Encrypt the new password and update the database
+        hashed_password = userAuthService.hashPassword(newPassword)
+        userAuthService.updatePasswordInDB(email, hashed_password)
+        
+        initializeAttemptCounter()
+        flash('Password reset successful!', 'success')
         return redirect(url_for('home'))
     else:
         decrementAttemptCounter()

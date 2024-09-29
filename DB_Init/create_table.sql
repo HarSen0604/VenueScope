@@ -3,7 +3,7 @@ CREATE TABLE club_head_details (
     head_id INT PRIMARY KEY,
     club_head VARCHAR(100) NOT NULL,
     phone_number VARCHAR(10) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    password TEXT NOT NULL,
     email VARCHAR(100) NOT NULL,
     CONSTRAINT check_phone_number CHECK (phone_number REGEXP '^[0-9]{10}$')
 );
