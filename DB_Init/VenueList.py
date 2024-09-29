@@ -1,6 +1,6 @@
 def generate_venue_insert_query(venues):
     """
-    Generate an SQL INSERT query for inserting venue names into a venue_list table.
+    Generate an SQL INSERT query for inserting venue names into a table.
 
     Args:
         venues (list): List of venue names to be inserted.

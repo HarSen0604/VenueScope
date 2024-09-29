@@ -26,6 +26,7 @@ class Captcha:
         Raises:
             FileNotFoundError: If no JPEG files are found in the CAPTCHA folder.
         """
+
         # Initialize an empty list to store valid jpg files
         jpg_files = []
 
@@ -52,6 +53,7 @@ class Captcha:
         Returns:
             bool: True if the user input matches the solution, False otherwise.
         """
+
         print(userInput, self.solution)
         return userInput == self.solution
     
@@ -66,7 +68,7 @@ class Captcha:
         Returns:
             bool: True if the passwords match and the new password meets the strong password criteria, False otherwise.
         """
-        print(newPassword, reEnterPassword)
+
         if newPassword != reEnterPassword:
             return False
 
@@ -77,8 +79,5 @@ class Captcha:
                             r'[A-Za-z\d@$!%*?&\-\_]{8,}$')  # Minimum 8 characters, escape hyphen
         
         if pattern.match(newPassword):
-            print("Password meets the policy.")
             return True
-        else:
-            print("Password does not meet the policy.")
-            return False
+        return False

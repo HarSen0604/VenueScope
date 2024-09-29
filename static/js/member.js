@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     VANTA.FOG({
-        el: "#vanta-bg", // The background element
-        highlightColor: 0xffc300, // Yellow highlight
-        midtoneColor: 0xff1f00, // Red midtone
-        lowlightColor: 0x2d00ff, // Blue lowlight
-        baseColor: 0xffebeb, // Light pink base
-        blurFactor: 0.6, // Set blur factor
-        zoom: 1.0, // Default zoom level
-        speed: 1.0, // Default speed
+        el: "#vanta-bg",
+        highlightColor: 0xffc300,
+        midtoneColor: 0xff1f00,
+        lowlightColor: 0x2d00ff,
+        baseColor: 0xffebeb,
+        blurFactor: 0.6,
+        zoom: 1.0,
+        speed: 1.0,
         mouseControls: true,
         touchControls: true,
         gyroControls: false,
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.getElementById("venueForm").addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent form submission until validation is complete
+    event.preventDefault();
 
     const dateInput = document.getElementById("date").value;
     const fromTimeInput = document.getElementById("from_time").value;
@@ -45,8 +45,6 @@ document.getElementById("venueForm").addEventListener("submit", function (event)
     // Adjust for IST (+5:30 hours)
     const offsetInMinutes = currentDateTime.getTimezoneOffset() + 330; // 330 minutes for IST
     const adjustedCurrentDate = new Date(currentDateTime.getTime() + offsetInMinutes * 60 * 1000);
-
-    const currentDateString = adjustedCurrentDate.toISOString().split('T')[0]; // Get the adjusted date
 
     // Check if booking is in the past date
     if (selectedDate < new Date(adjustedCurrentDate.toDateString())) {

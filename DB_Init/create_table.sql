@@ -8,7 +8,7 @@ CREATE TABLE club_head_details (
     CONSTRAINT check_phone_number CHECK (phone_number REGEXP '^[0-9]{10}$')
 );
 
--- Contains the list of clubs from the website (https://su.psgtech.ac.in/clubs.php)
+-- Contains the list of clubs from the website ( https://su.psgtech.ac.in/clubs.php )
 CREATE TABLE club_list (
     club_id INT PRIMARY KEY,
     club_name VARCHAR(100) NOT NULL

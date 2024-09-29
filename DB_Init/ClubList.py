@@ -1,4 +1,3 @@
-# List of club names
 club_names = [
     'AeroModeling Club',
     'Animal Welfare Club',

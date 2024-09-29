@@ -13,6 +13,7 @@ class UserAuthentication:
         """
         Initializes the UserAuthentication object with connection details to the MySQL database.
         """
+
         database = 'VenueScope'
         self.db_config = {
             'user': 'root',
@@ -35,6 +36,7 @@ class UserAuthentication:
         Returns:
             bool: True if authentication is successful, False otherwise.
         """
+
         # First, check if the password meets the validation policy
         if not self.validatePassword(password):
             print("Password does not meet the strong password policy.")
@@ -73,6 +75,7 @@ class UserAuthentication:
         Returns:
             bool: True if the password meets the policy, False otherwise.
         """
+
         # Corrected regex to enforce the password policy
         pattern = re.compile(r'^(?=.*\d)'          # At least one digit
                             r'(?=.*[a-z])'        # At least one lowercase letter
@@ -96,6 +99,7 @@ class UserAuthentication:
         Returns:
             str: The stored hashed password if the email exists, None otherwise.
         """
+
         try:
             # Connect to the MySQL database
             conn = mysql.connector.connect(**self.db_config)
@@ -136,6 +140,7 @@ class UserAuthentication:
         Returns:
             bool: True if login is successful, False otherwise.
         """
+
         # URL of the login page
         url = 'https://ecampus.psgtech.ac.in/studzone2/'
 
@@ -187,6 +192,7 @@ class UserAuthentication:
         Returns:
             str: The hashed password.
         """
+        
         salt = bcrypt.gensalt()
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
         return hashed_password.decode('utf-8')

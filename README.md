@@ -1,7 +1,7 @@
 # VenueScope Application
 
 ## Overview
-VenueScope is a open-sourced Flask-based web application that allows users to book venues and manage club events. It integrates MySQL for database operations, offers CAPTCHA functionality for user authentication, and enforces strong password policies.
+VenueScope is a open sourced Flask-based web application that allows users to book venues and manage club events. It integrates MySQL for database operations, offers CAPTCHA functionality for user authentication, and enforces strong password policies.
 
 ## Tech Stack
 - **Backend**: Flask (Python)

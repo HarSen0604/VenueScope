@@ -27,7 +27,7 @@ SOURCE insert_venue_list.sql;
 SOURCE insert_club_head.sql;
 EOF
 
-# Remove the .sql files created after execution
+# Remove the .sql files created
 rm -f insert_club_list.sql
 rm -f insert_club_head_details.sql
 rm -f insert_club_head.sql

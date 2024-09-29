@@ -18,9 +18,9 @@ def generateClubHeadAssociations(numClubs, headIds):
     """
     random.shuffle(headIds)
     associations = []
-    for club_id in range(1, numClubs + 1):
-        head_id = headIds[club_id - 1]
-        associations.append((club_id, head_id))
+    for clubID in range(1, numClubs + 1):
+        head_id = headIds[clubID - 1]
+        associations.append((clubID, head_id))
     return associations
 
 associations = generateClubHeadAssociations(numClubs, headIds)

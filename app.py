@@ -5,7 +5,7 @@ from VenueManagement import VenueManagement
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = '!@#$%^&*()-=_+[]{}\|;:\'\"/.,<>?`~'
+app.secret_key = '!@#$%^&*()-=_+[]{}\|;:/.,<>?`~'
 
 # Initialize services
 captchaService = Captcha()

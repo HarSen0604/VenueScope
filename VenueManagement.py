@@ -176,7 +176,7 @@ class VenueManagement:
         connection = self.getDBConnection()
         cursor = connection.cursor()
 
-        # Insert the new booking into the database
+        # Insert the new booking into the DB
         query = """
         INSERT INTO booked_venue (venue_id, club_id, date, from_time, end_time, venue_link)
         VALUES ((SELECT venue_id FROM venue_list WHERE venue_name = %s), 
