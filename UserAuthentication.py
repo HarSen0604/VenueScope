@@ -17,7 +17,7 @@ class UserAuthentication:
         database = 'VenueScope'
         self.db_config = {
             'user': 'root',
-            'password': 'Karaikudi-630002',
+            'password': 'root',
             'host': 'localhost',
             'database': database,
         }
